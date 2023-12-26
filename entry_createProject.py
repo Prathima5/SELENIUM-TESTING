@@ -1,0 +1,54 @@
+# test_login.py
+import time
+from checkTask import checkTask
+from selenium import webdriver
+from createProject import createProject
+from createTask import createTask
+from deleteTask import deleteTask
+
+class TestLogin():
+    def __init__(self) -> None:
+       
+        self.driver = webdriver.Chrome()
+        
+       
+        self.driver.get("https://app.asana.com/-/login")
+    
+        
+    def test_successful_login(self):
+        time.sleep(10)
+        email_input = self.driver.find_element('xpath',"//input[@type='text']")
+      
+        email_input.send_keys("aimanoor514@gmail.com")
+        time.sleep(1)
+        self.driver.find_elements('xpath',"//div[@role='button']")[1].click()
+        time.sleep(6)
+        password_input = self.driver.find_element('xpath',"//input[@type='password']")
+        password_input.send_keys("Rosepetal514@")
+        time.sleep(2)
+        previous=self.driver.current_url.strip()
+        login_button = self.driver.find_element('xpath',"//div[@class='ThemeableRectangularButtonPresentation--isEnabled ThemeableRectangularButtonPresentation ThemeableRectangularButtonPresentation--large NuxButton LoginPasswordForm-loginButton']")
+        login_button.click()
+        time.sleep(5)
+        curr=self.driver.current_url.strip()
+        print(previous,curr)
+
+        assert previous != curr, "Login test case failed."
+        if(previous!=curr):
+            #print("Passed: Login test")
+            pass
+        time.sleep(5)
+        self.runCreateProject()
+    
+        
+    def runCreateProject(self):
+        create=createProject(self.driver)
+        create.runcreateProject("PROJECT 1")
+   
+
+    def tearDown(self):
+        self.driver.quit()
+
+if __name__ == '__main__':
+    testLogin=TestLogin()
+    testLogin.test_successful_login()
